@@ -36,7 +36,7 @@ type File struct {
 func NewBucket(cfg BucketConfig) (*Bucket, error) {
 	awsCfg := &aws.Config{
 		Region:   aws.String(cfg.Region),
-		LogLevel: 5,
+		LogLevel: aws.LogLevel(aws.LogDebug),
 	}
 
 	b := &Bucket{
