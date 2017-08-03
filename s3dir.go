@@ -2,6 +2,7 @@ package s3dir
 
 import (
 	"errors"
+	"log"
 	"net/http"
 	"os"
 	"strings"
@@ -56,6 +57,7 @@ func NewBucket(cfg BucketConfig) (*Bucket, error) {
 }
 
 func (b *Bucket) Open(path string) (http.File, error) {
+	log.Printf("S3 Open: %s", path)
 	s3File := &File{
 		bucket: b,
 		path:   path,
@@ -70,6 +72,7 @@ func (b *Bucket) Open(path string) (http.File, error) {
 	if err != nil {
 		return s3File, err
 	}
+	log.Printf("S3 Response: %v", resp)
 
 	s3File.s3Object = resp
 
