@@ -81,7 +81,7 @@ func (b *Bucket) Open(path string) (http.File, error) {
 
 // http.File
 func (f *File) Readdir(count int) ([]os.FileInfo, error) {
-	log.Printf("Readdir: %d. %s", count, f.key)
+	log.Printf("Readdir: %d. %s", count, f.path)
 	return nil, ErrNotImplemented
 }
 
