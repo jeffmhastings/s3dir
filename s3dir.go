@@ -81,11 +81,13 @@ func (b *Bucket) Open(path string) (http.File, error) {
 
 // http.File
 func (f *File) Readdir(count int) ([]os.FileInfo, error) {
+	log.Printf("Readdir: %d. %s", count, f.path)
 	return nil, ErrNotImplemented
 }
 
 // http.File
 func (f *File) Stat() (os.FileInfo, error) {
+	log.Printf("Stat: %s", f.path)
 	return f, nil
 }
 
@@ -117,7 +119,7 @@ func (f *File) Size() int64 {
 
 // file mode bits
 func (f *File) Mode() os.FileMode {
-	return 000
+	return 0444
 }
 
 // modification time
