@@ -81,7 +81,7 @@ func (b *Bucket) Open(path string) (http.File, error) {
 
 // http.File
 func (f *File) Readdir(count int) ([]os.FileInfo, error) {
-	log.Printf("Readdir: %d. %s", count, f.path)
+	log.Printf("Readdir: %d. %s", count, f.key)
 	return nil, ErrNotImplemented
 }
 
@@ -93,45 +93,55 @@ func (f *File) Stat() (os.FileInfo, error) {
 
 // io.Seeker
 func (f *File) Seek(offset int64, whence int) (int64, error) {
+	log.Printf("seek, %v %v ", offset, whence)
 	return 0, ErrNotImplemented
 }
 
 // io.Reader
 func (f *File) Read(p []byte) (int, error) {
+
+	log.Printf("read")
 	return f.s3Object.Body.Read(p)
 }
 
 // io.Closer
 func (f *File) Close() error {
+	log.Printf("close")
 	return f.s3Object.Body.Close()
 }
 
 // base name of the file
 func (f *File) Name() string {
+	log.Printf("name")
 	name := strings.TrimLeft(f.path, "/")
 	return name
 }
 
 // length in bytes for regular files; system-dependent for others
 func (f *File) Size() int64 {
+	log.Printf("size")
 	return *f.s3Object.ContentLength
 }
 
 // file mode bits
 func (f *File) Mode() os.FileMode {
+	log.Printf("mode")
 	return 0444
 }
 
 // modification time
 func (f *File) ModTime() time.Time {
+	log.Printf("modtime")
 	return *f.s3Object.LastModified
 }
 
 // abbreviation for Mode().IsDir()
 func (f *File) IsDir() bool {
-	return false
+	log.Printf("isdir")
+	return strings.HasSuffix(f.path, "/")
 }
 
 func (f *File) Sys() interface{} {
+	log.Printf("Sys")
 	return f.s3Object
 }
