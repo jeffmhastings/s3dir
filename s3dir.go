@@ -62,7 +62,7 @@ func (b *Bucket) Open(path string) (http.File, error) {
 		return nil, err
 	}
 
-	if len(l.Contents) > 1 || len(l.CommonPrefixes) > 1 {
+	if len(l.CommonPrefixes) > 0 || len(l.Contents) > 0 {
 		return NewDir(b, prefix, l), nil
 	}
 

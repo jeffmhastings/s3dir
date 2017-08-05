@@ -69,13 +69,13 @@ func (d *Dir) Readdir(count int) ([]os.FileInfo, error) {
 	for i := 0; i < len(d.data.CommonPrefixes); i++ {
 		info[i] = &Dir{
 			bucket: d.bucket,
-			path:   *d.data.CommonPrefixes[i].Prefix,
+			path:   strings.TrimPrefix(*d.data.CommonPrefixes[i].Prefix, d.path),
 		}
 
 	}
 
-	for i := 0; i < len(d.data.Contents); i++ {
-		info[i] = &File{
+	for i, j := 0, len(d.data.CommonPrefixes); i < len(d.data.Contents); i, j = i+1, j+1 {
+		info[j] = &File{
 			bucket: d.bucket,
 			path:   strings.TrimPrefix(*d.data.Contents[i].Key, d.path),
 		}
