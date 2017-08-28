@@ -3,9 +3,11 @@ package s3dir
 import (
 	"errors"
 	"net/http"
+	"os"
 	"strings"
 
 	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/awserr"
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/s3"
 )
@@ -27,8 +29,8 @@ type BucketConfig struct {
 
 func NewBucket(cfg BucketConfig) (*Bucket, error) {
 	awsCfg := &aws.Config{
-		Region:   aws.String(cfg.Region),
-		LogLevel: aws.LogLevel(aws.LogDebug),
+		Region: aws.String(cfg.Region),
+		//LogLevel: aws.LogLevel(aws.LogDebug),
 	}
 
 	b := &Bucket{
@@ -74,6 +76,12 @@ func (b *Bucket) Open(path string) (http.File, error) {
 
 	resp, err := b.s3.GetObject(params)
 	if err != nil {
+		if awsErr, ok := err.(awserr.Error); ok {
+			switch awsErr.Code() {
+			case s3.ErrCodeNoSuchKey:
+				return nil, os.ErrNotExist
+			}
+		}
 		return nil, err
 	}
 
