@@ -31,6 +31,10 @@ type BucketConfig struct {
 }
 
 func NewBucket(cfg BucketConfig) (*Bucket, error) {
+	if "" != cfg.BucketPrefix && !strings.HasPrefix(cfg.BucketPrefix, "/") {
+		cfg.BucketPrefix = "/" + cfg.BucketPrefix
+	}
+
 	sess := session.Must(session.NewSession(&aws.Config{
 		Region:   aws.String(cfg.Region),
 		LogLevel: aws.LogLevel(aws.LogDebug),
@@ -56,7 +60,6 @@ func NewBucket(cfg BucketConfig) (*Bucket, error) {
 func (b *Bucket) Open(path string) (http.File, error) {
 	if b.config.BucketPrefix != "" && !strings.HasPrefix(path, b.config.BucketPrefix) {
 		path = b.config.BucketPrefix + path
-		log.Printf("[INFO] prepended to %s", path)
 	}
 
 	prefix := strings.TrimPrefix(path, "/")
@@ -80,10 +83,9 @@ func (b *Bucket) Open(path string) (http.File, error) {
 	// This is an actual object. Get it
 	params := &s3.GetObjectInput{
 		Bucket: b.bucket,
-		Key:    aws.String("/" + path),
+		Key:    aws.String(path),
 	}
 
-	log.Printf("Get object: %v", params)
 	resp, err := b.s3.GetObject(params)
 	if err != nil {
 		if awsErr, ok := err.(awserr.Error); ok {
