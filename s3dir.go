@@ -54,9 +54,12 @@ func NewBucket(cfg BucketConfig) (*Bucket, error) {
 }
 
 func (b *Bucket) Open(path string) (http.File, error) {
-	if b.config.BucketPrefix != "" && !strings.HasPrefix(path, b.config.BucketPrefix) {
-		log.Printf("[INFO] denying access because %s doesn't begin with %s", path, b.config.BucketPrefix)
-		return nil, os.ErrNotExist
+	//if b.config.BucketPrefix != "" && !strings.HasPrefix(path, b.config.BucketPrefix) {
+	//	log.Printf("[INFO] denying access because %s doesn't begin with %s", path, b.config.BucketPrefix)
+	//	return nil, os.ErrNotExist
+	//}
+	if b.config.BucketPrefix != "" {
+		path += b.config.BucketPrefix
 	}
 
 	prefix := strings.TrimPrefix(path, "/")
