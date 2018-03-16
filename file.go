@@ -2,7 +2,6 @@ package s3dir
 
 import (
 	"io"
-	"log"
 	"os"
 	"strings"
 	"time"
@@ -17,7 +16,6 @@ type File struct {
 }
 
 func NewFile(bucket *Bucket, path string, object *s3.GetObjectOutput) *File {
-	log.Printf("Creating new file: %s", path)
 	return &File{
 		bucket:   bucket,
 		path:     path,

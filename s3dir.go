@@ -2,7 +2,6 @@ package s3dir
 
 import (
 	"errors"
-	"log"
 	"net/http"
 	"os"
 	"strings"
