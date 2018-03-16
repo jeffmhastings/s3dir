@@ -2,6 +2,7 @@ package s3dir
 
 import (
 	"errors"
+	"log"
 	"net/http"
 	"os"
 	"strings"
@@ -38,6 +39,7 @@ func NewBucket(cfg BucketConfig) (*Bucket, error) {
 	b := &Bucket{
 		s3:     s3.New(sess),
 		bucket: aws.String(cfg.BucketName),
+		config: cfg,
 	}
 
 	params := &s3.HeadBucketInput{
@@ -53,6 +55,7 @@ func NewBucket(cfg BucketConfig) (*Bucket, error) {
 
 func (b *Bucket) Open(path string) (http.File, error) {
 	if b.config.BucketPrefix != "" && !strings.HasPrefix(path, b.config.BucketPrefix) {
+		log.Printf("[INFO] denying access because %s doesn't begin with %s", path, b.config.BucketPrefix)
 		return nil, os.ErrNotExist
 	}
 
