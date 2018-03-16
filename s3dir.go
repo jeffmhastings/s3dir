@@ -24,8 +24,9 @@ type Bucket struct {
 }
 
 type BucketConfig struct {
-	Region     string
-	BucketName string
+	Region       string
+	BucketName   string
+	BucketPrefix string
 }
 
 func NewBucket(cfg BucketConfig) (*Bucket, error) {
@@ -51,6 +52,10 @@ func NewBucket(cfg BucketConfig) (*Bucket, error) {
 }
 
 func (b *Bucket) Open(path string) (http.File, error) {
+	if b.config.BucketPrefix != "" && !strings.HasPrefix(path, b.config.BucketPrefix) {
+		return nil, os.ErrNotExist
+	}
+
 	prefix := strings.TrimPrefix(path, "/")
 	if len(prefix) > 0 && !strings.HasSuffix(prefix, "/") {
 		prefix += "/"
