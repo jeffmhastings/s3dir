@@ -31,8 +31,8 @@ type BucketConfig struct {
 
 func NewBucket(cfg BucketConfig) (*Bucket, error) {
 	sess := session.Must(session.NewSession(&aws.Config{
-		Region: aws.String(cfg.Region),
-		//LogLevel: aws.LogLevel(aws.LogDebug),
+		Region:   aws.String(cfg.Region),
+		LogLevel: aws.LogLevel(aws.LogDebug),
 	}))
 
 	b := &Bucket{
