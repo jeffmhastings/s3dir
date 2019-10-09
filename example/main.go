@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/lxfontes/s3dir"
+	"github.com/jeffmhastings/s3dir"
 )
 
 var (
