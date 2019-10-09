@@ -11,7 +11,7 @@ package main
 import (
   "net/http"
 
-  "github.com/lxfontes/s3dir"
+  "github.com/jeffmhastings/s3dir"
 )
 
 func main() {
